@@ -1,17 +1,14 @@
 // app/context/AuthContext.jsx
 "use client";
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(null);
-
-  // Load token from storage on startup
-  useEffect(() => {
-    const savedToken = localStorage.getItem("gmail_token");
-    if (savedToken) setToken(savedToken);
-  }, []);
+  const [token, setToken] = useState(() => {
+    if (typeof window === "undefined") return null;
+    return localStorage.getItem("gmail_token");
+  });
 
   const login = () => {
     if (!window.google) return;

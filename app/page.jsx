@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAuth } from "./context/AuthContext";
 import { fetchBankEmails } from "./lib/gmailService";
 import { parseTransaction } from "./lib/parseTransaction";
@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const { token, login } = useAuth();
-  const { transactions, setTransactions } = useTransactions();
+  const { setTransactions, filteredTransactions } = useTransactions();
   const router = useRouter();
   const idleTimer = useRef(null);
 
@@ -36,7 +36,7 @@ export default function Home() {
 
     if (!pin) router.replace("/passcode");
     else if (!verified) router.replace("/unlock");
-  }, [token]);
+  }, [token, router]);
 
   // AUTO LOCK AFTER 5 MIN IDLE
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function Home() {
       events.forEach(e => window.removeEventListener(e, resetTimer));
       clearTimeout(idleTimer.current);
     };
-  }, [token]);
+  }, [token, router]);
 
   // FETCH EMAILS
   useEffect(() => {
@@ -96,12 +96,7 @@ export default function Home() {
     }
 
     load();
-  }, [token]);
-
-  const { dateFilter } = useTransactions();
-
-  const { filteredTransactions } = useTransactions();
-
+  }, [token, setTransactions]);
 
 
   // LOADING
@@ -152,10 +147,6 @@ export default function Home() {
     <Layout>
       {loading ? (
         <div className="flex justify-center py-24">Syncing...</div>
-      ) : loading ? (
-        <div className="flex justify-center py-24">
-          Syncing...
-        </div>
       ) : filteredTransactions.length > 0 ? (
         <>
           <SummaryCards transactions={filteredTransactions} />
