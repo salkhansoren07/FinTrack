@@ -19,6 +19,8 @@ function extractBody(payload) {
 }
 
 export function parseTransaction(email) {
+  if (!email?.payload) return null;
+
   // 1. Extract Headers to check 'From' or 'Subject' for Bank Name
   const headers = email.payload.headers || [];
   const subject = headers.find(h => h.name === 'Subject')?.value || "";
@@ -27,7 +29,12 @@ export function parseTransaction(email) {
   const bodyData = extractBody(email.payload);
   if (!bodyData) return null;
 
-  const decoded = decodeBase64(bodyData);
+  let decoded = "";
+  try {
+    decoded = decodeBase64(bodyData);
+  } catch {
+    return null;
+  }
   
   // Combine all text sources to search for the bank
   const fullContext = `${subject} ${from} ${decoded}`;

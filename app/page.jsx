@@ -13,6 +13,17 @@ import BankSummary from "./components/BankSummary";
 import CategoryChart from "./components/CategoryChart";
 import { useRouter } from "next/navigation";
 
+function readCategoryOverrides() {
+  try {
+    const raw = localStorage.getItem("categoryOverrides");
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
 
 
 export default function Home() {
@@ -74,9 +85,7 @@ export default function Home() {
       try {
         const emails = await fetchBankEmails(token);
 
-        const overrides = JSON.parse(
-          localStorage.getItem("categoryOverrides") || "{}"
-        );
+        const overrides = readCategoryOverrides();
 
         const parsed = emails
           .map(parseTransaction)

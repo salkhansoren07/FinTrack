@@ -2,11 +2,20 @@
 
 const CATEGORIES = ["Food", "Shopping", "Transfer", "Bills", "Other"];
 
+function readCategoryOverrides() {
+  try {
+    const raw = localStorage.getItem("categoryOverrides");
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
 export default function TransactionTable({ transactions = [] }) {
   const updateCategory = (id, category) => {
-    const existing = JSON.parse(
-      localStorage.getItem("categoryOverrides") || "{}"
-    );
+    const existing = readCategoryOverrides();
 
     existing[id] = category;
 
