@@ -3,6 +3,21 @@ import { AuthProvider } from "./context/AuthContext";
 import Script from "next/script";
 import { TransactionProvider } from "./context/TransactionContext";
 
+export const metadata = {
+  title: "FinTrack",
+  description: "Smart expense tracking from Gmail",
+  applicationName: "FinTrack",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "FinTrack",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+};
+
 export const viewport = {
   width: "device-width",
   initialScale: 1,
