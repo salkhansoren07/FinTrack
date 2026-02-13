@@ -51,3 +51,34 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 # Fintrack
+
+## Cloud data sync setup (Supabase + Vercel)
+
+This app now syncs user category overrides to cloud storage.
+
+### 1. Create Supabase table
+
+Run this SQL in Supabase SQL editor:
+
+```sql
+create table if not exists public.user_profiles (
+  user_sub text primary key,
+  email text,
+  category_overrides jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+```
+
+### 2. Add environment variables
+
+Set these in Vercel Project -> Settings -> Environment Variables:
+
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `NEXT_PUBLIC_GOOGLE_CLIENT_ID`
+
+For local development, add the same keys to `.env.local`.
+
+### 3. Redeploy
+
+After adding environment variables, redeploy the app from Vercel.

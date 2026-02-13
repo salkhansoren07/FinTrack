@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useAuth } from "./context/AuthContext";
 import { fetchBankEmails } from "./lib/gmailService";
+import { fetchCloudUserData, saveCloudUserData } from "./lib/userDataClient";
 import { parseTransaction } from "./lib/parseTransaction";
 import Layout from "./components/Layout";
 import SummaryCards from "./components/SummaryCards";
@@ -83,9 +84,31 @@ export default function Home() {
     async function load() {
       setLoading(true);
       try {
-        const emails = await fetchBankEmails(token);
+        const localOverrides = readCategoryOverrides();
+        let cloudOverrides = {};
 
-        const overrides = readCategoryOverrides();
+        try {
+          const cloudData = await fetchCloudUserData(token);
+          if (cloudData?.categoryOverrides && typeof cloudData.categoryOverrides === "object") {
+            cloudOverrides = cloudData.categoryOverrides;
+          }
+        } catch (error) {
+          console.warn("Cloud sync read failed:", error);
+        }
+
+        const overrides = { ...cloudOverrides, ...localOverrides };
+        localStorage.setItem("categoryOverrides", JSON.stringify(overrides));
+
+        if (
+          Object.keys(localOverrides).length > 0 &&
+          Object.keys(cloudOverrides).length === 0
+        ) {
+          saveCloudUserData(token, overrides).catch((error) => {
+            console.warn("Cloud sync write failed:", error);
+          });
+        }
+
+        const emails = await fetchBankEmails(token);
 
         const parsed = emails
           .map(parseTransaction)
@@ -142,7 +165,7 @@ export default function Home() {
           </button>
 
           <p className="text-xs text-slate-400 mt-6">
-            Your data stays on your device.
+            Data sync is enabled across your devices.
           </p>
         </div>
 
@@ -166,7 +189,7 @@ export default function Home() {
             <CategoryChart transactions={filteredTransactions} />
           </div>
 
-          <TransactionTable transactions={filteredTransactions} />
+          <TransactionTable transactions={filteredTransactions} token={token} />
         </>
       ) : (
         <div className="text-center py-24">

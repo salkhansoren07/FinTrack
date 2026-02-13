@@ -1,4 +1,5 @@
 "use client";
+import { saveCloudUserData } from "../lib/userDataClient";
 
 const CATEGORIES = ["Food", "Shopping", "Transfer", "Bills", "Other"];
 
@@ -13,8 +14,8 @@ function readCategoryOverrides() {
   }
 }
 
-export default function TransactionTable({ transactions = [] }) {
-  const updateCategory = (id, category) => {
+export default function TransactionTable({ transactions = [], token = null }) {
+  const updateCategory = async (id, category) => {
     const existing = readCategoryOverrides();
 
     existing[id] = category;
@@ -23,6 +24,14 @@ export default function TransactionTable({ transactions = [] }) {
       "categoryOverrides",
       JSON.stringify(existing)
     );
+
+    if (token) {
+      try {
+        await saveCloudUserData(token, existing);
+      } catch (error) {
+        console.warn("Cloud sync write failed:", error);
+      }
+    }
 
     window.location.reload();
   };
