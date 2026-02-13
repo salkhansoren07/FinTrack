@@ -41,14 +41,14 @@ export default function ExpenseChart({ transactions = [] }) {
   const data = Object.values(map);
 
   return (
-    <div className="bg-white dark:bg-gray-900 p-6 rounded-3xl shadow-xl">
+    <div className="bg-white dark:bg-gray-900 p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-xl">
       <h3 className="font-semibold text-slate-400 mb-4">Income vs Expense</h3>
 
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={240}>
         <LineChart data={data}>
 
 
-          <XAxis dataKey="date" />
+          <XAxis dataKey="date" tick={{ fontSize: 11 }} />
 
           <Tooltip
             contentStyle={{

@@ -24,7 +24,7 @@ function formatDateLocal(date) {
   return `${year}-${month}-${day}`;
 }
 
-export default function Sidebar() {
+export default function Sidebar({ onClose }) {
   const { logout } = useAuth();
   const { dateFilter, setDateFilter } = useTransactions();
 
@@ -70,14 +70,25 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="w-64 flex-1 overflow-y-auto pr-1 bg-white dark:bg-gray-900 shadow-xl p-6 flex flex-col h-screen">
+    <div className="w-64 md:w-64 h-full md:h-screen flex-1 overflow-y-auto pr-1 bg-white dark:bg-gray-900 shadow-xl p-5 md:p-6 flex flex-col">
 
       {/* TOP SECTION */}
       <div>
 
-        <h1 className="text-xl font-bold mb-10 text-blue-600">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-xl font-bold text-blue-600">
           💰 FinTrack
-        </h1>
+          </h1>
+          {onClose && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="md:hidden text-sm px-2 py-1 rounded border border-slate-200 dark:border-slate-700"
+            >
+              Close
+            </button>
+          )}
+        </div>
 
         {/* MAIN NAV */}
         <nav className="space-y-4">

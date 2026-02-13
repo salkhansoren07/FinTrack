@@ -33,7 +33,7 @@ function Card({ title, value, icon, red }) {
             ₹ {value.toLocaleString("en-IN")}
           </p>
         </div>
-        <div className="bg-white/20 p-3 rounded-xl">{icon}</div>
+        <div className="bg-white/20 p-2 sm:p-3 rounded-xl">{icon}</div>
       </div>
     </div>
   );

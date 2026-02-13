@@ -25,21 +25,22 @@ export default function CategoryChart({ transactions = [] }) {
   }));
 
   return (
-    <div className="bg-white dark:bg-gray-900 p-6 rounded-3xl shadow-xl">
+    <div className="bg-white dark:bg-gray-900 p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-xl">
       <h3 className="font-semibold text-slate-400 mb-4">
         Spending by Category
       </h3>
 
-      <ResponsiveContainer width="100%" height={250}>
+      <ResponsiveContainer width="100%" height={240}>
         <PieChart>
           <Pie
             data={data}
             dataKey="value"
             nameKey="name"
-            innerRadius={55}
-            outerRadius={90}
+            innerRadius={45}
+            outerRadius={75}
             paddingAngle={4}
-            label
+            label={false}
+            labelLine={false}
           >
             {data.map((_, index) => (
               <Cell
