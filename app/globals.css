@@ -6,8 +6,22 @@
 }
 
 @layer base {
+  html,
+  body {
+    min-height: 100%;
+    background-color: #f8fafc;
+  }
+
+  html.dark,
+  html.dark body {
+    background-color: #020617;
+  }
+
   body {
     @apply bg-slate-50 text-slate-900 transition-colors duration-300;
+    min-height: 100dvh;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
   }
   .dark body {
     @apply bg-[#020617] text-slate-50;
