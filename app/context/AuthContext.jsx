@@ -14,7 +14,9 @@ export function AuthProvider({ children }) {
     if (!window.google) return;
     const client = window.google.accounts.oauth2.initTokenClient({
       client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-      scope: "https://www.googleapis.com/auth/gmail.readonly",
+      scope:
+        "https://www.googleapis.com/auth/gmail.readonly openid email profile",
+      ux_mode: "popup",
       callback: (res) => {
         if (res?.access_token) {
           setToken(res.access_token);

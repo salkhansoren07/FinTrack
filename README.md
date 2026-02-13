@@ -77,6 +77,13 @@ Set these in Vercel Project -> Settings -> Environment Variables:
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `NEXT_PUBLIC_GOOGLE_CLIENT_ID`
 
+Google OAuth scopes required by this app:
+
+- `https://www.googleapis.com/auth/gmail.readonly`
+- `openid`
+- `email`
+- `profile`
+
 For local development, add the same keys to `.env.local`.
 
 ### 3. Redeploy

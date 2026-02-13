@@ -15,13 +15,33 @@ async function getGoogleUser(accessToken) {
   return user;
 }
 
+async function getGmailUser(accessToken) {
+  const res = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/profile", {
+    headers: { Authorization: `Bearer ${accessToken}` },
+    cache: "no-store",
+  });
+
+  if (!res.ok) return null;
+
+  const profile = await res.json();
+  if (!profile?.emailAddress) return null;
+
+  return {
+    sub: profile.emailAddress.toLowerCase(),
+    email: profile.emailAddress.toLowerCase(),
+  };
+}
+
 async function getUserFromRequest(req) {
   const auth = req.headers.get("authorization") || "";
   const accessToken = auth.startsWith("Bearer ") ? auth.slice(7) : "";
 
   if (!accessToken) return null;
 
-  return getGoogleUser(accessToken);
+  const user = await getGoogleUser(accessToken);
+  if (user) return user;
+
+  return getGmailUser(accessToken);
 }
 
 export async function GET(req) {
