@@ -21,6 +21,7 @@ import {
   isValidUsername,
   USERNAME_REQUIREMENTS_MESSAGE,
 } from "../lib/authValidation.mjs";
+import GmailPrivacyDisclosure from "../components/GmailPrivacyDisclosure";
 
 const SUPPORT_EMAIL = "support@fintrak.online";
 
@@ -284,6 +285,11 @@ function SuccessPanel({ router, connectGmail }) {
         </p>
       </div>
 
+      <GmailPrivacyDisclosure
+        compact
+        className="mt-5 border-emerald-200 bg-white/80 dark:border-emerald-900/50 dark:bg-slate-950/35"
+      />
+
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
         <button
           type="button"
@@ -507,6 +513,8 @@ function AuthFooter({ mode, setMode, setError, continueWithGoogle }) {
         <Chrome size={18} />
         Continue with Google
       </button>
+
+      <GmailPrivacyDisclosure compact className="mt-4" />
 
       <p className="mt-4 text-center text-sm text-slate-500 dark:text-slate-400">
         {mode === "signup" ? "Already have an account? " : "Don’t have an account? "}

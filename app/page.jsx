@@ -138,6 +138,12 @@ function LandingNavLinks({ className = "" }) {
         Privacy
       </Link>
       <Link
+        href="/gmail-privacy"
+        className={`${className} inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white`}
+      >
+        Gmail Privacy
+      </Link>
+      <Link
         href="/terms"
         className={`${className} inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white`}
       >
@@ -659,6 +665,12 @@ function LandingPage({ authErrorMessage, testimonials }) {
                 className="transition hover:text-blue-600 dark:hover:text-blue-300"
               >
                 Privacy
+              </Link>
+              <Link
+                href="/gmail-privacy"
+                className="transition hover:text-blue-600 dark:hover:text-blue-300"
+              >
+                Gmail Privacy
               </Link>
               <Link
                 href="/terms"

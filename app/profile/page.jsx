@@ -11,6 +11,7 @@ import {
   Trash2,
   UserRound,
 } from "lucide-react";
+import GmailPrivacyDisclosure from "../components/GmailPrivacyDisclosure";
 import Layout from "../components/Layout";
 import { useAuth } from "../context/AuthContext";
 import { clearAllPinVerifications } from "../lib/clientSession";
@@ -48,6 +49,7 @@ export default function ProfilePage() {
   const {
     clearSession,
     connectGmail,
+    disconnectGmail,
     gmailConnected,
     hasPasscode,
     user,
@@ -56,6 +58,8 @@ export default function ProfilePage() {
   const [confirmation, setConfirmation] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [gmailConnectionError, setGmailConnectionError] = useState("");
+  const [gmailConnectionSuccess, setGmailConnectionSuccess] = useState("");
   const [feedbackForm, setFeedbackForm] = useState({
     role: "",
     location: "",
@@ -67,6 +71,7 @@ export default function ProfilePage() {
   const [feedbackLoading, setFeedbackLoading] = useState(true);
   const [feedbackAvailable, setFeedbackAvailable] = useState(true);
   const [feedbackSubmission, setFeedbackSubmission] = useState(null);
+  const [isDisconnectingGmail, startDisconnectTransition] = useTransition();
   const [isDeleting, startDeleteTransition] = useTransition();
   const [isSubmittingFeedback, startFeedbackTransition] = useTransition();
 
@@ -155,6 +160,8 @@ export default function ProfilePage() {
 
     setError("");
     setSuccessMessage("");
+    setGmailConnectionError("");
+    setGmailConnectionSuccess("");
 
     startDeleteTransition(async () => {
       const res = await fetch("/api/account", {
@@ -206,6 +213,39 @@ export default function ProfilePage() {
       setFeedbackSuccess(
         "Thanks for sharing your feedback. It has been saved for review before anything is published."
       );
+    });
+  };
+
+  const disconnectGmailConnection = () => {
+    if (!gmailConnected) {
+      return;
+    }
+
+    if (
+      !window.confirm(
+        "Disconnect Gmail from FinTrak? This stops new Gmail syncs and removes the saved Gmail connection from FinTrak."
+      )
+    ) {
+      return;
+    }
+
+    setGmailConnectionError("");
+    setGmailConnectionSuccess("");
+
+    startDisconnectTransition(async () => {
+      try {
+        const payload = await disconnectGmail();
+        setGmailConnectionSuccess(
+          payload?.warning ||
+            "Gmail has been disconnected from your FinTrak account."
+        );
+      } catch (disconnectError) {
+        setGmailConnectionError(
+          disconnectError instanceof Error
+            ? disconnectError.message
+            : "Could not disconnect Gmail right now."
+        );
+      }
     });
   };
 
@@ -270,6 +310,8 @@ export default function ProfilePage() {
               that can be reconnected if access expires or is revoked.
             </p>
 
+            <GmailPrivacyDisclosure compact className="mt-5" />
+
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"
@@ -279,6 +321,17 @@ export default function ProfilePage() {
                 <Link2 size={18} />
                 {gmailConnected ? "Reconnect Gmail" : "Connect Gmail"}
               </button>
+              {gmailConnected ? (
+                <button
+                  type="button"
+                  disabled={isDisconnectingGmail}
+                  onClick={disconnectGmailConnection}
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-70 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+                >
+                  <Link2 size={18} />
+                  {isDisconnectingGmail ? "Disconnecting..." : "Disconnect Gmail"}
+                </button>
+              ) : null}
               <a
                 href={`mailto:${SUPPORT_EMAIL}`}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
@@ -287,6 +340,18 @@ export default function ProfilePage() {
                 Contact support
               </a>
             </div>
+
+            {gmailConnectionError ? (
+              <p className="mt-4 rounded-xl bg-rose-100 px-4 py-3 text-sm text-rose-700 dark:bg-rose-950/30 dark:text-rose-300">
+                {gmailConnectionError}
+              </p>
+            ) : null}
+
+            {gmailConnectionSuccess ? (
+              <p className="mt-4 rounded-xl bg-emerald-100 px-4 py-3 text-sm text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300">
+                {gmailConnectionSuccess}
+              </p>
+            ) : null}
           </div>
 
           <div className="rounded-3xl border border-rose-200 bg-rose-50/70 p-6 shadow-sm dark:border-rose-900/40 dark:bg-rose-950/10">

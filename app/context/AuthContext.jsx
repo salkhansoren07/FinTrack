@@ -35,6 +35,20 @@ async function postJson(url, body) {
   return payload;
 }
 
+async function deleteJson(url) {
+  const res = await fetch(url, {
+    method: "DELETE",
+  });
+
+  const payload = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    throw new Error(payload?.error || "Request failed");
+  }
+
+  return payload;
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [gmailConnected, setGmailConnected] = useState(false);
@@ -80,6 +94,12 @@ export function AuthProvider({ children }) {
     }
     const suffix = search.toString() ? `?${search.toString()}` : "";
     window.location.assign(`/api/auth/google/start${suffix}`);
+  }, []);
+
+  const disconnectGmail = useCallback(async () => {
+    const payload = await deleteJson("/api/gmail-connection");
+    setGmailConnected(false);
+    return payload;
   }, []);
 
   const signup = useCallback(async ({ username, email, password }) => {
@@ -141,6 +161,7 @@ export function AuthProvider({ children }) {
         login,
         signup,
         connectGmail,
+        disconnectGmail,
         logout,
         clearSession,
         refreshSession,

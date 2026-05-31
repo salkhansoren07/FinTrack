@@ -1,3 +1,4 @@
+import Link from "next/link";
 import LegalPageLayout from "../components/LegalPageLayout";
 
 export const metadata = {
@@ -64,6 +65,12 @@ export default function PrivacyPage() {
         features, including transaction extraction, categorization, summaries,
         and user-requested sync operations.
       </p>
+      <p>
+        FinTrak&apos;s use and transfer of information received from Google APIs
+        adheres to the Google API Services User Data Policy, including the
+        Limited Use requirements. A detailed Gmail access explanation is
+        available on the <Link href="/gmail-privacy">Gmail Privacy page</Link>.
+      </p>
 
       <h2>Storage and retention</h2>
       <p>
@@ -102,7 +109,10 @@ export default function PrivacyPage() {
       <h2>User choices</h2>
       <p>Users may:</p>
       <ul>
+        <li>review the Gmail permission details before connecting Google</li>
+        <li>reconnect Gmail from the profile page if access expires</li>
         <li>disconnect Google access through their Google account settings</li>
+        <li>delete their FinTrak account and saved Gmail connection data</li>
         <li>clear local browser storage for cached transactions and preferences</li>
         <li>stop using the app at any time</li>
       </ul>

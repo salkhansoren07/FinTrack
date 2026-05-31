@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { ArrowRight, KeyRound, UserPlus } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import GmailPrivacyDisclosure from "./GmailPrivacyDisclosure";
 
 const DEFAULT_SIGNUP = {
   username: "",
@@ -234,6 +235,7 @@ export default function PublicAuthCard() {
             3. Connect Gmail once to unlock transaction sync
           </p>
         </div>
+        <GmailPrivacyDisclosure compact className="mt-4" />
         <a
           href="#faq"
           className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-blue-600 transition hover:text-blue-700 dark:text-blue-300 dark:hover:text-blue-200"

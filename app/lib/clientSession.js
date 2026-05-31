@@ -1,6 +1,6 @@
 "use client";
 
-const PUBLIC_ROUTES = new Set(["/", "/privacy", "/terms"]);
+const PUBLIC_ROUTES = new Set(["/", "/privacy", "/gmail-privacy", "/terms"]);
 const AUTH_FLOW_ROUTES = new Set([
   "/get-started",
   "/forgot-password",

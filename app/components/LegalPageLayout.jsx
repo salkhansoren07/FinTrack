@@ -40,7 +40,7 @@ export default function LegalPageLayout({
           </div>
 
           <div className="relative px-6 py-8 sm:px-8 sm:py-10">
-            <div className="[&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-slate-900 dark:[&_h2]:text-white [&_h2:first-child]:mt-0 [&_li]:ml-5 [&_li]:list-disc [&_li]:text-sm [&_li]:leading-7 [&_li]:text-slate-600 dark:[&_li]:text-slate-300 [&_p]:mt-3 [&_p]:text-sm [&_p]:leading-7 [&_p]:text-slate-600 dark:[&_p]:text-slate-300 [&_ul]:mt-3 [&_ul]:space-y-2">
+            <div className="[&_a]:font-semibold [&_a]:text-blue-700 [&_a]:underline-offset-4 hover:[&_a]:underline dark:[&_a]:text-blue-300 [&_code]:rounded-md [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-xs [&_code]:text-slate-800 dark:[&_code]:bg-slate-950 dark:[&_code]:text-slate-200 [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-slate-900 dark:[&_h2]:text-white [&_h2:first-child]:mt-0 [&_li]:ml-5 [&_li]:list-disc [&_li]:text-sm [&_li]:leading-7 [&_li]:text-slate-600 dark:[&_li]:text-slate-300 [&_p]:mt-3 [&_p]:text-sm [&_p]:leading-7 [&_p]:text-slate-600 dark:[&_p]:text-slate-300 [&_ul]:mt-3 [&_ul]:space-y-2">
               {children}
             </div>
           </div>

@@ -31,6 +31,12 @@ export default function sitemap() {
       priority: 0.5,
     },
     {
+      url: `${siteUrl}/gmail-privacy`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
       url: `${siteUrl}/terms`,
       lastModified: now,
       changeFrequency: "monthly",

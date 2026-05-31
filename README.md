@@ -105,6 +105,33 @@ Google OAuth scopes required by this app:
 - `email`
 - `profile`
 
+### Gmail privacy and Google OAuth verification
+
+FinTrak uses the restricted Gmail read-only scope, so production deployments
+should be prepared for Google OAuth verification before broad public launch.
+
+Before submitting a production OAuth app, confirm that:
+
+- the OAuth consent screen uses the real FinTrak app name, logo, support email,
+  homepage URL, privacy policy URL, and terms URL
+- `/gmail-privacy`, `/privacy`, and `/terms` are publicly reachable on the
+  production domain
+- onboarding clearly explains that Gmail access is read-only and used only for
+  transaction detection
+- the app does not send, delete, modify, label, archive, sell, or use Gmail data
+  for advertising
+- account deletion removes stored Gmail connection data and attempts to revoke
+  the Google token
+- the verification submission includes a short demo video showing signup,
+  Gmail connection, transaction sync, reconnect, and account deletion
+- the deployment follows the Google API Services User Data Policy, including
+  the Limited Use requirements
+
+For a private beta, keep the Google OAuth app in testing mode and add beta
+users as test users in Google Cloud Console. For public access, complete Google
+OAuth app verification first; Google may require additional review or a security
+assessment for restricted Gmail scopes depending on launch scope.
+
 For local development, add the same keys to `.env.local`.
 
 ### 3. Google OAuth redirect URI

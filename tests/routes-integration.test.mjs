@@ -589,6 +589,74 @@ test("account deletion still succeeds when Google token revocation fails", async
   }
 });
 
+test("gmail disconnect clears saved connection and revokes the Google token", async () => {
+  setBaseEnv();
+  resetTestState();
+
+  const encryptedRefreshToken = encryptSecretValue("refresh-token-value");
+  const supabase = createSupabaseMock({
+    users: [
+      {
+        id: "user-disconnect",
+        username: "kiran",
+        email: "kiran@example.com",
+        password_hash: "hash",
+        passcode_hash: null,
+        gmail_refresh_token: encryptedRefreshToken,
+        gmail_email: "kiran@gmail.com",
+        gmail_subject: "google-sub",
+        category_overrides: null,
+      },
+    ],
+  });
+  setSupabaseAdminForTests(supabase);
+
+  const revokedTokens = [];
+  const originalFetch = global.fetch;
+  global.fetch = async (url, init = {}) => {
+    if (String(url).includes("oauth2.googleapis.com/revoke")) {
+      revokedTokens.push(String(init.body));
+      return new Response("", { status: 200 });
+    }
+
+    throw new Error(`Unexpected fetch call in test: ${url}`);
+  };
+
+  try {
+    const { DELETE } = await import("../app/api/gmail-connection/route.js");
+    const sessionCookie = createSessionCookie({
+      id: "user-disconnect",
+      username: "kiran",
+      email: "kiran@example.com",
+    });
+
+    const response = await DELETE(
+      createRequest({
+        url: "http://localhost/api/gmail-connection",
+        method: "DELETE",
+        cookies: {
+          fintrak_session: sessionCookie,
+        },
+      })
+    );
+
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), {
+      ok: true,
+      gmailConnected: false,
+      warning: null,
+    });
+    assert.equal(revokedTokens.length, 1);
+    assert.match(revokedTokens[0], /token=refresh-token-value/);
+    assert.equal(supabase.state.users[0].gmail_refresh_token, null);
+    assert.equal(supabase.state.users[0].gmail_email, null);
+    assert.equal(supabase.state.users[0].gmail_subject, null);
+  } finally {
+    global.fetch = originalFetch;
+    resetTestState();
+  }
+});
+
 test("observability route ingests client-side reports", async () => {
   setBaseEnv();
 
